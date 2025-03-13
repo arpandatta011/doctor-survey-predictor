@@ -14,17 +14,17 @@
 
 ## Installation
 
-### Clone the repository: https://github.com/your-username/doctor-survey-predictor.git
+#### Clone the repository: https://github.com/your-username/doctor-survey-predictor.git
 
-### Navigate to the project directory: cd doctor-survey-predictor
+#### Navigate to the project directory: cd doctor-survey-predictor
 
-### Create and activate a virtual environment: python -m venv
+#### Create and activate a virtual environment: python -m venv
 
-### On Windows use: venv\Scripts\activate
+#### On Windows use: venv\Scripts\activate
 
-### Install dependencies: pip install -r requirements.txt
+#### Install dependencies: pip install -r requirements.txt
 
-### Run the application: python backend/app.py
+#### Run the application: python backend/app.py
 
 ## Front-End -
 #### npm create-vite@latest frontend
