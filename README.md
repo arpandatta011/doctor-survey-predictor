@@ -18,7 +18,7 @@
 
 ### Navigate to the project directory: cd doctor-survey-predictor
 
-### Create and activate a virtual environment: python -m venv venv
+### Create and activate a virtual environment: python -m venv
 
 ### On Windows use: venv\Scripts\activate
 
@@ -27,8 +27,8 @@
 ### Run the application: python backend/app.py
 
 ## Front-End -
-npm create-vite@latest frontend
-cd frontend
-npm install
-npm install bootstrap@5.3.3
-npm run dev
+#### npm create-vite@latest frontend
+#### cd frontend
+#### npm install
+#### npm install bootstrap@5.3.3
+#### npm run dev
