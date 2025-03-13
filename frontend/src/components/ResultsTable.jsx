@@ -4,16 +4,14 @@ function ResultsTable({ doctors }) {
   if (!doctors || doctors.length === 0) {
     return null;
   }
+  console.log("Doctors data for table:", doctors);
 
-  console.log("Doctors data for table:", doctors); // Debug log
-
-  // Function to determine progress bar color based on likelihood score
   const getProgressBarColor = (score) => {
-    if (score < 40) return "bg-danger"; // Red for low likelihood
-    if (score < 70) return "bg-warning"; // Yellow for medium likelihood
-    return "bg-success"; // Green for high likelihood
+    if (score < 40) return "bg-danger"; 
+    if (score < 70) return "bg-warning";
+    return "bg-success"; 
   };
-
+  
   return (
     <div className="table-responsive">
       <table className="table table-striped table-hover">
