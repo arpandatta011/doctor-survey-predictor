@@ -16,7 +16,6 @@ CORS(app)
 
 def load_data():
     try:
-        # Check if file exists before attempting to read it
         if os.path.exists('dummy_npi_data.xlsx'):
             data = pd.read_excel('dummy_npi_data.xlsx')
             print("Data loaded successfully. Columns:", data.columns.tolist())
@@ -54,9 +53,9 @@ def create_dummy_data():
     
     return data
 
-# Train the model
+# ----------- Train Model -------------
 def train_model(data):
-    # Create a mapping dictionary for column names to make code more maintainable
+   
     column_mapping = {
         'npi': ['NPI', 'npi'],
         'specialty': ['Speciality', 'Specialty', 'specialty'],
@@ -67,7 +66,6 @@ def train_model(data):
         'attempts': ['Count of Attempts', 'attempts']
     }
     
-    # Find the actual column names in the data
     actual_columns = {}
     for key, possible_names in column_mapping.items():
         for name in possible_names:
@@ -79,7 +77,7 @@ def train_model(data):
     
     print(f"Using columns: {actual_columns}")
     
-    # Convert login_time to hours and minutes
+    
     try:
         data['login_hour'] = data[actual_columns['login_time']].apply(
             lambda x: int(str(x).split(':')[0]) if isinstance(x, str) and ':' in str(x) else 12
@@ -92,7 +90,6 @@ def train_model(data):
         data['login_hour'] = np.random.randint(8, 18, len(data))
         data['login_minute'] = np.random.randint(0, 60, len(data))
     
-    # Calculate time spent
     if 'time_spent' in actual_columns:
         data['time_spent_minutes'] = data[actual_columns['time_spent']]
     elif 'login_time' in actual_columns and 'logout_time' in actual_columns:
@@ -109,7 +106,6 @@ def train_model(data):
     else:
         data['time_spent_minutes'] = np.random.randint(5, 60, len(data))
     
-    # Determine completion status
     if 'attempts' in actual_columns:
         max_attempts = data[actual_columns['attempts']].max()
         if max_attempts > 0:
@@ -119,12 +115,11 @@ def train_model(data):
     else:
         data['completed_survey'] = np.random.choice([0, 1], len(data), p=[0.3, 0.7])
     
-    # Prepare features for model
+
     X = data[['login_hour', 'login_minute', actual_columns['specialty'], 
               actual_columns['region'], 'time_spent_minutes']]
     y = data['completed_survey']
     
-    # Define preprocessing for numeric and categorical features
     numeric_features = ['login_hour', 'login_minute', 'time_spent_minutes']
     categorical_features = [actual_columns['specialty'], actual_columns['region']]
     
@@ -137,7 +132,7 @@ def train_model(data):
             ('cat', categorical_transformer, categorical_features)
         ])
     
-    # Create and train the model
+    # -------------- Create and train the model --------------
     model = Pipeline(steps=[
         ('preprocessor', preprocessor),
         ('classifier', RandomForestClassifier(n_estimators=100, random_state=42))
@@ -150,7 +145,7 @@ def train_model(data):
 def predict_doctors(model, data, input_time, column_mapping):
     hour, minute = map(int, input_time.split(':'))
     
-    # Process login time
+    # -------------- Process login time --------------
     try:
         data['login_hour'] = data[column_mapping['login_time']].apply(
             lambda x: int(str(x).split(':')[0]) if isinstance(x, str) and ':' in str(x) else 12
@@ -163,37 +158,32 @@ def predict_doctors(model, data, input_time, column_mapping):
         data['login_hour'] = np.random.randint(8, 18, len(data))
         data['login_minute'] = np.random.randint(0, 60, len(data))
     
-    # Calculate hour difference (considering 24-hour wraparound)
+
     data['hour_diff'] = np.minimum(
         np.abs(data['login_hour'] - hour),
         24 - np.abs(data['login_hour'] - hour)
     )
     
-    # Ensure time_spent_minutes is available
     if 'time_spent_minutes' not in data.columns:
         if 'time_spent' in column_mapping:
             data['time_spent_minutes'] = data[column_mapping['time_spent']]
         else:
             data['time_spent_minutes'] = np.random.randint(5, 60, len(data))
     
-    # Prepare features for prediction
     X_pred = data[['login_hour', 'login_minute', column_mapping['specialty'], 
                    column_mapping['region'], 'time_spent_minutes']]
     
-    # Get probability predictions
     proba = model.predict_proba(X_pred)[:, 1]  
-    
-    # Adjust probabilities based on time difference
+
     time_factor = 1 / (1 + data['hour_diff'])
     adjusted_proba = proba * time_factor
     
-    # Calculate likelihood scores
+
     data['likelihood_score'] = (adjusted_proba * 100).round(1)
     
-    # Get top doctors
+
     top_doctors = data.sort_values('likelihood_score', ascending=False).head(20)
     
-    # Format results
     results = []
     for _, row in top_doctors.iterrows():
         results.append({
@@ -203,7 +193,6 @@ def predict_doctors(model, data, input_time, column_mapping):
             'likelihood_score': float(row['likelihood_score'])
         })
     
-    # Print sample result for debugging
     if results:
         print("Sample result:", results[0])
     
@@ -222,12 +211,12 @@ def get_predictions():
     time = request.args.get('time', '09:00')
     
     try:
-        # Validate time format
+
         try:
             hour, minute = map(int, time.split(':'))
             if hour < 0 or hour > 23 or minute < 0 or minute > 59:
                 raise ValueError("Invalid time format")
-            time = f"{hour:02d}:{minute:02d}"  # Ensure consistent format
+            time = f"{hour:02d}:{minute:02d}"  
         except ValueError:
             return jsonify({
                 'success': False,
