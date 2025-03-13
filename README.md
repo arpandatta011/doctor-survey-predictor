@@ -14,7 +14,7 @@
 
 ## Installation
 
-### Clone the repository: git clone https://github.com/your-username/doctor-survey-predictor.git
+### Clone the repository: https://github.com/your-username/doctor-survey-predictor.git
 
 ### Navigate to the project directory: cd doctor-survey-predictor
 
@@ -25,3 +25,10 @@
 ### Install dependencies: pip install -r requirements.txt
 
 ### Run the application: python backend/app.py
+
+## Front-End -
+npm create-vite@latest frontend
+cd frontend
+npm install
+npm install bootstrap@5.3.3
+npm run dev
