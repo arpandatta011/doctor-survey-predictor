@@ -13,6 +13,9 @@ import traceback
 app = Flask(__name__)
 CORS(app)  
 
+@app.route('/')
+def home():
+    return jsonify({"message": "Doctor Survey Predictor API is running!"}), 200
 
 def load_data():
     try:
@@ -238,4 +241,4 @@ def get_predictions():
         }), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000, debug=True)
