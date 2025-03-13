@@ -7,11 +7,21 @@
 ## Features
 
 ### User-friendly interface for inputting survey data
-
 ### Machine learning model for prediction
-
 ### Backend powered by Flask/Django
-
 ### Interactive data visualization
-
 ### Secure authentication and data handling
+
+## Installation
+
+### Clone the repository: git clone https://github.com/your-username/doctor-survey-predictor.git
+
+### Navigate to the project directory: cd doctor-survey-predictor
+
+### Create and activate a virtual environment: python -m venv venv
+
+### On Windows use: venv\Scripts\activate
+
+### Install dependencies: pip install -r requirements.txt
+
+### Run the application: python backend/app.py
